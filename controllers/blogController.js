@@ -6,7 +6,7 @@ const logger = require('./../libs/loggerLib');
 const check = require('./../libs/checkLib')
 /* Models */
 const BlogModel = mongoose.model('Blog')
-const emailModel = mongoose.model('Email')
+const EmailModel = mongoose.model('Email')
 
 
 /**
