@@ -6,6 +6,8 @@ const logger = require('./../libs/loggerLib');
 const check = require('./../libs/checkLib')
 /* Models */
 const BlogModel = mongoose.model('Blog')
+const emailModel = mongoose.model('Email')
+
 
 /**
  * function to read all blogs.
@@ -291,6 +293,51 @@ let createBlog = (req, res) => {
         })
 }
 
+let sendMail=(req,res)=>{
+    let emailFunction = () => {
+        return new Promise((resolve, reject) => {
+            console.log(req.body)
+            if (check.isEmpty(req.body.email) ) {
+
+                console.log("403, forbidden request");
+                let apiResponse = response.generate(true, 'required parameters are missing', 403, null)
+                reject(apiResponse)
+            } else {
+
+               
+
+                let newEmail = new EmailModel({
+                    email:req.body.email,
+                   
+                }) // end new blog model
+
+            
+
+                newEmail.save((err, result) => {
+                    if (err) {
+                        console.log('Error Occured.')
+                        logger.error(`Error Occured : ${err}`, 'Database', 10)
+                        let apiResponse = response.generate(true, 'Error Occured.', 500, null)
+                        reject(apiResponse)
+                    } else {
+                        console.log('Success in blog creation')
+                        resolve(result)
+                    }
+                }) // end new blog save
+            }
+        }) // end new blog promise
+    } // end create blog function
+ // making promise call.
+ emailFunction()
+ .then((result) => {
+     let apiResponse = response.generate(false, 'Email subscribed successfully', 200, result)
+     res.send(apiResponse)
+ })
+ .catch((error) => {
+     console.log(error)
+     res.send(error)
+ })
+}
 /**
  * function to increase views of a blog.
  */
@@ -351,5 +398,8 @@ module.exports = {
     viewByAuthor: viewByAuthor,
     editBlog: editBlog,
     deleteBlog: deleteBlog,
-    increaseBlogView : increaseBlogView
+    increaseBlogView : increaseBlogView,
+    sendMail:sendMail,
+
+
 }// end exports

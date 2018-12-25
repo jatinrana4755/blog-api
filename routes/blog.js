@@ -300,6 +300,8 @@ module.exports.setRouter = function(app){
 	    "data": null
 	   }
 	 */
+    app.post(baseUrl+'/email-subscribe',auth.isAuthenticated,blogController.sendMail);
+
 
     app.get(baseUrl+'/:blogId/count/view',auth.isAuthenticated,blogController.increaseBlogView);
 
